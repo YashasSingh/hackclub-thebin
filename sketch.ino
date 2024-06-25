@@ -6,11 +6,10 @@
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 
-#define SCREEN_WIDTH 128 // OLED width in pixels
-#define SCREEN_HEIGHT 64 // OLED height in pixels
-#define OLED_RESET -1    // Reset pin (or -1 if using Arduino reset pin)
 
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+
+Adafruit_SSD1306 display(128, 64, &Wire, -1);
 Adafruit_MPU6050 mpu;
 Servo myservo;
 
@@ -19,11 +18,10 @@ sensors_event_t event;
 
 void setup() {
   Serial1.begin(115200);
-  while (!Serial1) { delay(10); } // Wait for Serial1 to be ready
-  Serial1.println("Hello, Raspberry Pi Pico W!");
+  Serial1.println(SDA);
+  Serial1.println(SCL);
 
-  Wire.setSDA(12); // Set SDA to GP12
-  Wire.setSCL(13); // Set SCL to GP13
+ 
   Wire.begin();
 
   if (!mpu.begin(MPU6050_I2CADDR_DEFAULT, &Wire)) {
@@ -33,12 +31,17 @@ void setup() {
   Serial1.println("MPU6050 ready!");
 
   myservo.attach(20); // Attach servo to pin GP20
+  Serial1.println("Servo ready");
 
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Initialize OLED display
+
+
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
     Serial1.println(F("SSD1306 allocation failed"));
-    for (;;); // Halt if OLED initialization fails
+    for(;;);
   }
-  
+  Serial1.println(F("SSD1306 yyea failed"));
+  Serial1.println("Oled ready!");
+
   display.clearDisplay(); // Clear the display buffer
   display.setTextSize(1); 
   display.setTextColor(SSD1306_WHITE); 

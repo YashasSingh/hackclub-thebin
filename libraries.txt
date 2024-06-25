@@ -2,5 +2,5 @@
 # See https://docs.wokwi.com/guides/libraries
 
 Adafruit MPU6050
-MD_MAX72XX
 LedControl
+ssd1306
