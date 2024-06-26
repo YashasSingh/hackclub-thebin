@@ -6,9 +6,10 @@
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 
-#define STEP_PIN 21
-#define DIR_PIN 22
+#define STEP_PIN 15
+#define DIR_PIN 14
 #define stepsPerRevolution 200
+#define ENABLE_PIN 13
 
 Adafruit_SSD1306 display(128, 64, &Wire, -1);
 Adafruit_MPU6050 mpu;
@@ -49,9 +50,11 @@ void setup() {
   // Initialize stepper motor pins
   pinMode(STEP_PIN, OUTPUT);
   pinMode(DIR_PIN, OUTPUT);
-
+  pinMode(ENABLE_PIN, OUTPUT);
   // Set initial direction
   digitalWrite(DIR_PIN, HIGH);
+  
+  digitalWrite(ENABLE_PIN, LOW);
 }
 
 void loop() {
