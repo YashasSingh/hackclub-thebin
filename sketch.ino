@@ -8,6 +8,7 @@
 
 #define STEP_PIN 21
 #define DIR_PIN 22
+#define stepsPerRevolution 200
 
 Adafruit_SSD1306 display(128, 64, &Wire, -1);
 Adafruit_MPU6050 mpu;
@@ -74,8 +75,13 @@ void loop() {
   myservo.write(pos);
 
   // Step the motor
-  digitalWrite(STEP_PIN, HIGH);
-  delayMicroseconds(1000); // Adjust delay to control speed
-  digitalWrite(STEP_PIN, LOW);
-  delayMicroseconds(1000); // Adjust delay to control speed
+   for (int i = 0; i < stepsPerRevolution; i++) {
+    // These four lines result in 1 step:
+    digitalWrite(STEP_PIN, HIGH);
+    delayMicroseconds(2000);
+    digitalWrite(STEP_PIN, LOW);
+    delayMicroseconds(2000);
+    display.println(i+("Hello, world!"));
+  }
+
 }

@@ -56,7 +56,7 @@
     [ "drv1:1A", "stepper1:B+", "gold", [ "v-28.75", "h-133.92" ] ],
     [ "drv1:2A", "stepper1:A+", "orange", [ "v-19.15", "h-124.32" ] ],
     [ "drv1:2B", "stepper1:A-", "#8f4814", [ "v-9.55", "h-114.72" ] ],
-    [ "drv1:RESET", "drv1:SLEEP", "black", [ "h-9.6", "v9.6" ] ],
+    [ "drv1:RESET", "drv1:SLEEP", "black", [ "v19.4", "h9.6" ] ],
     [ "drv1:STEP", "pico:GP15", "yellow", [ "h0.4", "v19.4", "h124.8" ] ],
     [ "drv1:VMOT", "pico:VBUS", "red", [ "h-9.12", "v-201.55", "h258.89" ] ],
     [
@@ -76,7 +76,8 @@
     [ "wokwi-mpu6050-0:SCL", "pico:GP5", "green", [ "h105.6", "v9.68" ] ],
     [ "ir1:VCC", "pico:VBUS", "red", [ "v-201.6", "h9.6" ] ],
     [ "ir1:GND", "pico:GND.5", "black", [ "v0" ] ],
-    [ "ir1:DAT", "pico:GP16", "green", [ "v0" ] ]
+    [ "ir1:DAT", "pico:GP16", "green", [ "v0" ] ],
+    [ "drv1:ENABLE", "pico:GND.4", "black", [ "v57.8", "h163.6", "v-76.8" ] ]
   ],
   "dependencies": {}
 }
