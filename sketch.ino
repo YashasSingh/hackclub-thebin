@@ -6,8 +6,8 @@
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
 
-
-
+#define STEP_PIN 21
+#define DIR_PIN 22
 
 Adafruit_SSD1306 display(128, 64, &Wire, -1);
 Adafruit_MPU6050 mpu;
@@ -21,7 +21,6 @@ void setup() {
   Serial1.println(SDA);
   Serial1.println(SCL);
 
- 
   Wire.begin();
 
   if (!mpu.begin(MPU6050_I2CADDR_DEFAULT, &Wire)) {
@@ -33,13 +32,10 @@ void setup() {
   myservo.attach(20); // Attach servo to pin GP20
   Serial1.println("Servo ready");
 
-
-
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
     Serial1.println(F("SSD1306 allocation failed"));
-    for(;;);
+    for (;;);
   }
-  Serial1.println(F("SSD1306 yyea failed"));
   Serial1.println("Oled ready!");
 
   display.clearDisplay(); // Clear the display buffer
@@ -48,6 +44,13 @@ void setup() {
   display.setCursor(0, 0); 
   display.println(F("Hello, world!"));
   display.display();
+
+  // Initialize stepper motor pins
+  pinMode(STEP_PIN, OUTPUT);
+  pinMode(DIR_PIN, OUTPUT);
+
+  // Set initial direction
+  digitalWrite(DIR_PIN, HIGH);
 }
 
 void loop() {
@@ -69,4 +72,10 @@ void loop() {
   pos += 5;
   if (pos > 180) { pos = 0; }
   myservo.write(pos);
+
+  // Step the motor
+  digitalWrite(STEP_PIN, HIGH);
+  delayMicroseconds(1000); // Adjust delay to control speed
+  digitalWrite(STEP_PIN, LOW);
+  delayMicroseconds(1000); // Adjust delay to control speed
 }

@@ -19,7 +19,7 @@
       "top": 192.87,
       "left": -603.29,
       "rotate": 270,
-      "attrs": { "size": "17" }
+      "attrs": { "size": "17", "arrow": "orange" }
     },
     {
       "type": "wokwi-a4988",
@@ -36,13 +36,21 @@
       "left": -182.03,
       "rotate": 180,
       "attrs": { "i2cAddress": "0x3c" }
+    },
+    {
+      "type": "wokwi-ir-receiver",
+      "id": "ir1",
+      "top": 373.15,
+      "left": -136.02,
+      "rotate": 180,
+      "attrs": {}
     }
   ],
   "connections": [
     [ "pico:GP0", "$serialMonitor:RX", "", [] ],
     [ "pico:GP1", "$serialMonitor:TX", "", [] ],
     [ "wokwi-servo-0:GND", "pico:GND.8", "black", [ "h0", "v-19.2" ] ],
-    [ "wokwi-servo-0:V+", "pico:VBUS", "red", [ "h-76.8", "v-38.3" ] ],
+    [ "wokwi-servo-0:V+", "pico:VBUS", "red", [ "h-19.2", "v-76.7" ] ],
     [ "wokwi-servo-0:PWM", "pico:GP20", "green", [ "h-9.6", "v77" ] ],
     [ "drv1:1B", "stepper1:B-", "green", [ "v-38.35", "h-143.52" ] ],
     [ "drv1:1A", "stepper1:B+", "gold", [ "v-28.75", "h-133.92" ] ],
@@ -65,7 +73,10 @@
     [ "wokwi-mpu6050-0:GND", "pico:GND.1", "black", [ "h9.6", "v28.88", "h67.2", "v-67.2" ] ],
     [ "drv1:DIR", "pico:GP14", "purple", [ "h19.6", "v-9.4", "h57.6", "v-0.04" ] ],
     [ "wokwi-mpu6050-0:SDA", "pico:GP4", "green", [ "h115.2", "v9.68" ] ],
-    [ "wokwi-mpu6050-0:SCL", "pico:GP5", "green", [ "h105.6", "v9.68" ] ]
+    [ "wokwi-mpu6050-0:SCL", "pico:GP5", "green", [ "h105.6", "v9.68" ] ],
+    [ "ir1:VCC", "pico:VBUS", "red", [ "v-201.6", "h9.6" ] ],
+    [ "ir1:GND", "pico:GND.5", "black", [ "v0" ] ],
+    [ "ir1:DAT", "pico:GP16", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }
