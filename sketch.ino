@@ -75,43 +75,34 @@ void loop() {
   // Clear the display buffer
   display.clearDisplay();
 
-  // Display accelerometer data
+  // Display data in table format
+  display.setTextSize(1);
+
   display.setCursor(0, 0);
-  display.print("Accel:");
+  display.println("Accel    Gyro    Temp");
+
   display.setCursor(0, 10);
-  display.print("X: ");
-  display.print(accel_event.acceleration.x);
-  display.print(" m/s^2");
+  display.print("X:");
+  display.print(accel_event.acceleration.x, 1);
+  display.print("     ");
+  display.print(gyro_event.gyro.x, 1);
+
   display.setCursor(0, 20);
-  display.print("Y: ");
-  display.print(accel_event.acceleration.y);
-  display.print(" m/s^2");
+  display.print("Y:");
+  display.print(accel_event.acceleration.y, 1);
+  display.print("     ");
+  display.print(gyro_event.gyro.y, 1);
+
   display.setCursor(0, 30);
-  display.print("Z: ");
-  display.print(accel_event.acceleration.z);
-  display.print(" m/s^2");
+  display.print("Z:");
+  display.print(accel_event.acceleration.z, 1);
+  display.print("     ");
+  display.print(gyro_event.gyro.z, 1);
 
-  // Display gyroscope data
   display.setCursor(0, 40);
-  display.print("Gyro:");
-  display.setCursor(0, 50);
-  display.print("X: ");
-  display.print(gyro_event.gyro.x);
-  display.print(" rad/s");
-  display.setCursor(0, 60);
-  display.print("Y: ");
-  display.print(gyro_event.gyro.y);
-  display.print(" rad/s");
-  display.setCursor(0, 70);
-  display.print("Z: ");
-  display.print(gyro_event.gyro.z);
-  display.print(" rad/s");
-
-  // Display temperature data
-  display.setCursor(0, 80);
   display.print("Temp:");
-  display.print(temp_event.temperature);
-  display.print(" C");
+  display.print(temp_event.temperature, 1);
+  display.print("         C");
 
   display.display(); // Update the display with the new data
 
