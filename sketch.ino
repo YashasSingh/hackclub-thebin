@@ -21,6 +21,7 @@ decode_results results; // Create a results object to store the decoded IR signa
 
 int pos = 0;
 int increment = 5; // Variable to track servo position change direction
+bool systemRunning = true; // Flag to track if the system is running or stopped
 sensors_event_t accel_event, gyro_event, temp_event;
 
 void setup() {
@@ -67,65 +68,73 @@ void setup() {
 void loop() {
   delay(2); // Small delay for stability
 
-  // Get accelerometer, gyroscope, and temperature data
-  mpu.getAccelerometerSensor()->getEvent(&accel_event);
-  mpu.getGyroSensor()->getEvent(&gyro_event);
-  mpu.getTemperatureSensor()->getEvent(&temp_event);
-
-  // Clear the display buffer
-  display.clearDisplay();
-
-  // Display data in table format
-  display.setTextSize(1);
-
-  display.setCursor(0, 0);
-  display.println("Accel    Gyro    Temp");
-
-  display.setCursor(0, 10);
-  display.print("X:");
-  display.print(accel_event.acceleration.x, 1);
-  display.print("     ");
-  display.print(gyro_event.gyro.x, 1);
-
-  display.setCursor(0, 20);
-  display.print("Y:");
-  display.print(accel_event.acceleration.y, 1);
-  display.print("     ");
-  display.print(gyro_event.gyro.y, 1);
-
-  display.setCursor(0, 30);
-  display.print("Z:");
-  display.print(accel_event.acceleration.z, 1);
-  display.print("     ");
-  display.print(gyro_event.gyro.z, 1);
-
-  display.setCursor(0, 40);
-  display.print("Temp:");
-  display.print(temp_event.temperature, 1);
-  display.print("         C");
-
-  display.display(); // Update the display with the new data
-
-  // Update servo position
-  pos += increment;
-  if (pos >= 180 || pos <= 0) {
-    // Trigger the motor for a full revolution
-    for (int i = 0; i < stepsPerRevolution; i++) {
-      digitalWrite(STEP_PIN, HIGH);
-      delayMicroseconds(2000);
-      digitalWrite(STEP_PIN, LOW);
-      delayMicroseconds(2000);
-    }
-
-    // Reverse the direction of the servo
-    increment = -increment;
-  }
-  myservo.write(pos);
-
   // Check if an IR signal is received
   if (irrecv.decode(&results)) {
     Serial1.print("IR Code: ");
     Serial1.println(results.value, HEX); // Print the received IR code
+    systemRunning = !systemRunning; // Toggle the systemRunning flag
     irrecv.resume(); // Receive the next value
+  }
+
+  if (systemRunning) {
+    // Get accelerometer, gyroscope, and temperature data
+    mpu.getAccelerometerSensor()->getEvent(&accel_event);
+    mpu.getGyroSensor()->getEvent(&gyro_event);
+    mpu.getTemperatureSensor()->getEvent(&temp_event);
+
+    // Clear the display buffer
+    display.clearDisplay();
+
+    // Display data in table format
+    display.setTextSize(1);
+
+    display.setCursor(0, 0);
+    display.println("Accel    Gyro    Temp");
+
+    display.setCursor(0, 10);
+    display.print("X:");
+    display.print(accel_event.acceleration.x, 1);
+    display.print("     ");
+    display.print(gyro_event.gyro.x, 1);
+
+    display.setCursor(0, 20);
+    display.print("Y:");
+    display.print(accel_event.acceleration.y, 1);
+    display.print("     ");
+    display.print(gyro_event.gyro.y, 1);
+
+    display.setCursor(0, 30);
+    display.print("Z:");
+    display.print(accel_event.acceleration.z, 1);
+    display.print("     ");
+    display.print(gyro_event.gyro.z, 1);
+
+    display.setCursor(0, 40);
+    display.print("Temp:          ");
+    display.print(temp_event.temperature, 1);
+    display.print(" C");
+
+    display.display(); // Update the display with the new data
+
+    // Update servo position
+    pos += increment;
+    if (pos >= 180 || pos <= 0) {
+      // Trigger the motor for a full revolution
+      for (int i = 0; i < stepsPerRevolution; i++) {
+        digitalWrite(STEP_PIN, HIGH);
+        delayMicroseconds(2000);
+        digitalWrite(STEP_PIN, LOW);
+        delayMicroseconds(2000);
+      }
+
+      // Reverse the direction of the servo
+      increment = -increment;
+    }
+    myservo.write(pos);
+  } else {
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.println("System Stopped");
+    display.display();
   }
 }
