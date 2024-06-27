@@ -5,15 +5,19 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
+#include <IRremote.h> // Include the IRremote library
 
 #define STEP_PIN 15
 #define DIR_PIN 14
 #define stepsPerRevolution 200
 #define ENABLE_PIN 13
+#define IR_PIN 16 // Define the IR receiver pin
 
 Adafruit_SSD1306 display(128, 64, &Wire, -1);
 Adafruit_MPU6050 mpu;
 Servo myservo;
+IRrecv irrecv(IR_PIN); // Create an IR receiver object
+decode_results results; // Create a results object to store the decoded IR signals
 
 int pos = 0;
 sensors_event_t event;
@@ -55,6 +59,8 @@ void setup() {
   digitalWrite(DIR_PIN, HIGH);
   
   digitalWrite(ENABLE_PIN, LOW);
+
+  irrecv.enableIRIn(); // Start the IR receiver
 }
 
 void loop() {
@@ -78,13 +84,19 @@ void loop() {
   myservo.write(pos);
 
   // Step the motor
-   for (int i = 0; i < stepsPerRevolution; i++) {
+  for (int i = 0; i < stepsPerRevolution; i++) {
     // These four lines result in 1 step:
     digitalWrite(STEP_PIN, HIGH);
     delayMicroseconds(2000);
     digitalWrite(STEP_PIN, LOW);
     delayMicroseconds(2000);
-    display.println(i+("Hello, world!"));
+    display.println(i + ("Hello, world!"));
   }
 
+  // Check if an IR signal is received
+  if (irrecv.decode(&results)) {
+    Serial1.print("IR Code: ");
+    Serial1.println(results.value, HEX); // Print the received IR code
+    irrecv.resume(); // Receive the next value
+  }
 }
