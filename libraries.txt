@@ -4,3 +4,4 @@
 Adafruit MPU6050
 LedControl
 ssd1306
+IRremote

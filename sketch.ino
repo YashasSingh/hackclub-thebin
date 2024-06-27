@@ -20,6 +20,7 @@ IRrecv irrecv(IR_PIN); // Create an IR receiver object
 decode_results results; // Create a results object to store the decoded IR signals
 
 int pos = 0;
+int increment = 5; // Variable to track servo position change direction
 sensors_event_t event;
 
 void setup() {
@@ -79,19 +80,20 @@ void loop() {
   Serial1.println(" m/s^2");
 
   // Update servo position
-  pos += 5;
-  if (pos > 180) { pos = 0; }
-  myservo.write(pos);
+  pos += increment;
+  if (pos >= 180 || pos <= 0) {
+    // Trigger the motor for a full revolution
+    for (int i = 0; i < stepsPerRevolution; i++) {
+      digitalWrite(STEP_PIN, HIGH);
+      delayMicroseconds(2000);
+      digitalWrite(STEP_PIN, LOW);
+      delayMicroseconds(2000);
+    }
 
-  // Step the motor
-  for (int i = 0; i < stepsPerRevolution; i++) {
-    // These four lines result in 1 step:
-    digitalWrite(STEP_PIN, HIGH);
-    delayMicroseconds(2000);
-    digitalWrite(STEP_PIN, LOW);
-    delayMicroseconds(2000);
-    display.println(i + ("Hello, world!"));
+    // Reverse the direction of the servo
+    increment = -increment;
   }
+  myservo.write(pos);
 
   // Check if an IR signal is received
   if (irrecv.decode(&results)) {
