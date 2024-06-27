@@ -21,7 +21,7 @@ decode_results results; // Create a results object to store the decoded IR signa
 
 int pos = 0;
 int increment = 5; // Variable to track servo position change direction
-sensors_event_t event;
+sensors_event_t accel_event, gyro_event, temp_event;
 
 void setup() {
   Serial1.begin(115200);
@@ -67,17 +67,53 @@ void setup() {
 void loop() {
   delay(2); // Small delay for stability
 
-  // Get and print accelerometer data
-  mpu.getAccelerometerSensor()->getEvent(&event);
-  Serial1.print("[");
-  Serial1.print(millis());
-  Serial1.print("] X: ");
-  Serial1.print(event.acceleration.x);
-  Serial1.print(", Y: ");
-  Serial1.print(event.acceleration.y);
-  Serial1.print(", Z: ");
-  Serial1.print(event.acceleration.z);
-  Serial1.println(" m/s^2");
+  // Get accelerometer, gyroscope, and temperature data
+  mpu.getAccelerometerSensor()->getEvent(&accel_event);
+  mpu.getGyroSensor()->getEvent(&gyro_event);
+  mpu.getTemperatureSensor()->getEvent(&temp_event);
+
+  // Clear the display buffer
+  display.clearDisplay();
+
+  // Display accelerometer data
+  display.setCursor(0, 0);
+  display.print("Accel:");
+  display.setCursor(0, 10);
+  display.print("X: ");
+  display.print(accel_event.acceleration.x);
+  display.print(" m/s^2");
+  display.setCursor(0, 20);
+  display.print("Y: ");
+  display.print(accel_event.acceleration.y);
+  display.print(" m/s^2");
+  display.setCursor(0, 30);
+  display.print("Z: ");
+  display.print(accel_event.acceleration.z);
+  display.print(" m/s^2");
+
+  // Display gyroscope data
+  display.setCursor(0, 40);
+  display.print("Gyro:");
+  display.setCursor(0, 50);
+  display.print("X: ");
+  display.print(gyro_event.gyro.x);
+  display.print(" rad/s");
+  display.setCursor(0, 60);
+  display.print("Y: ");
+  display.print(gyro_event.gyro.y);
+  display.print(" rad/s");
+  display.setCursor(0, 70);
+  display.print("Z: ");
+  display.print(gyro_event.gyro.z);
+  display.print(" rad/s");
+
+  // Display temperature data
+  display.setCursor(0, 80);
+  display.print("Temp:");
+  display.print(temp_event.temperature);
+  display.print(" C");
+
+  display.display(); // Update the display with the new data
 
   // Update servo position
   pos += increment;

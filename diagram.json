@@ -34,7 +34,6 @@
       "id": "oled1",
       "top": -1.74,
       "left": -182.03,
-      "rotate": 180,
       "attrs": { "i2cAddress": "0x3c" }
     },
     {
@@ -65,10 +64,10 @@
       "red",
       [ "v-9.55", "h86.55", "v-172.8", "h57.93", "v0", "h47.69" ]
     ],
-    [ "pico:GP5", "oled1:SCL", "purple", [ "h-76.8", "v-134.4", "h144.3" ] ],
-    [ "pico:GP4", "oled1:SDA", "gray", [ "h-19.2", "v-105.6", "h76.87" ] ],
-    [ "oled1:VCC", "pico:VBUS", "red", [ "v0" ] ],
-    [ "oled1:GND", "pico:GND.8", "black", [ "v0" ] ],
+    [ "pico:GP5", "oled1:SCL", "purple", [ "h-76.8", "v-259.2", "h153.44" ] ],
+    [ "pico:GP4", "oled1:SDA", "gray", [ "h-19.2", "v-105.6", "h163.2", "v-110.48" ] ],
+    [ "oled1:VCC", "pico:VBUS", "red", [ "v-14.32", "h-86.39", "v182.4" ] ],
+    [ "oled1:GND", "pico:GND.8", "black", [ "v-4.72", "h-86.54", "v192" ] ],
     [ "wokwi-mpu6050-0:VCC", "pico:VBUS", "red", [ "h28.8", "v-95.92", "h163.2" ] ],
     [ "wokwi-mpu6050-0:GND", "pico:GND.1", "black", [ "h9.6", "v28.88", "h67.2", "v-67.2" ] ],
     [ "drv1:DIR", "pico:GP14", "purple", [ "h19.6", "v-9.4", "h57.6", "v-0.04" ] ],
