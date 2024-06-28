@@ -5,23 +5,23 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <SPI.h>
-#include <IRremote.h> // Include the IRremote library
+#include <IRremote.h>
 
 #define STEP_PIN 15
 #define DIR_PIN 14
 #define stepsPerRevolution 200
 #define ENABLE_PIN 13
-#define IR_PIN 16 // Define the IR receiver pin
+#define IR_PIN 16
 
 Adafruit_SSD1306 display(128, 64, &Wire, -1);
 Adafruit_MPU6050 mpu;
 Servo myservo;
-IRrecv irrecv(IR_PIN); // Create an IR receiver object
-decode_results results; // Create a results object to store the decoded IR signals
+IRrecv irrecv(IR_PIN);
+decode_results results;
 
 int pos = 0;
-int increment = 5; // Variable to track servo position change direction
-bool systemRunning = true; // Flag to track if the system is running or stopped
+int increment = 5;
+bool systemRunning = true;
 sensors_event_t accel_event, gyro_event, temp_event;
 
 void setup() {
@@ -33,62 +33,54 @@ void setup() {
 
   if (!mpu.begin(MPU6050_I2CADDR_DEFAULT, &Wire)) {
     Serial1.println("MPU6050 not connected!");
-    while (1) { delay(10); } // Halt if MPU6050 is not connected
+    while (1) { delay(10); }
   }
   Serial1.println("MPU6050 ready!");
 
-  myservo.attach(20); // Attach servo to pin GP20
+  myservo.attach(20);
   Serial1.println("Servo ready");
 
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial1.println(F("SSD1306 allocation failed"));
     for (;;);
   }
   Serial1.println("Oled ready!");
 
-  display.clearDisplay(); // Clear the display buffer
-  display.setTextSize(1); 
-  display.setTextColor(SSD1306_WHITE); 
-  display.setCursor(0, 0); 
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
   display.println(F("Hello, world!"));
   display.display();
 
-  // Initialize stepper motor pins
   pinMode(STEP_PIN, OUTPUT);
   pinMode(DIR_PIN, OUTPUT);
   pinMode(ENABLE_PIN, OUTPUT);
-  // Set initial direction
+
   digitalWrite(DIR_PIN, HIGH);
-  
   digitalWrite(ENABLE_PIN, LOW);
 
-  irrecv.enableIRIn(); // Start the IR receiver
+  irrecv.enableIRIn();
 }
 
 void loop() {
-  delay(2); // Small delay for stability
+  delay(2);
 
-  // Check if an IR signal is received
   if (irrecv.decode(&results)) {
     Serial1.print("IR Code: ");
-    Serial1.println(results.value, HEX); // Print the received IR code
-
-    systemRunning = !systemRunning; // Toggle the systemRunning flag
-    irrecv.resume(); // Receive the next value
+    Serial1.println(results.value, HEX);
+    systemRunning = !systemRunning;
+    irrecv.resume();
   }
 
   if (systemRunning) {
-    // Get accelerometer, gyroscope, and temperature data
     mpu.getAccelerometerSensor()->getEvent(&accel_event);
     mpu.getGyroSensor()->getEvent(&gyro_event);
     mpu.getTemperatureSensor()->getEvent(&temp_event);
 
-    // Clear the display buffer
     display.clearDisplay();
 
-    // Display data in table format
     display.setTextSize(1);
-
     display.setCursor(0, 0);
     display.println("Accel    Gyro    Temp");
 
@@ -115,20 +107,16 @@ void loop() {
     display.print(temp_event.temperature, 1);
     display.print(" C");
 
-    display.display(); // Update the display with the new data
+    display.display();
 
-    // Update servo position
     pos += increment;
     if (pos >= 180 || pos <= 0) {
-      // Trigger the motor for a full revolution
       for (int i = 0; i < stepsPerRevolution; i++) {
         digitalWrite(STEP_PIN, HIGH);
         delayMicroseconds(2000);
         digitalWrite(STEP_PIN, LOW);
         delayMicroseconds(2000);
       }
-
-      // Reverse the direction of the servo
       increment = -increment;
     }
     myservo.write(pos);
