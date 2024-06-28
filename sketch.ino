@@ -72,6 +72,7 @@ void loop() {
   if (irrecv.decode(&results)) {
     Serial1.print("IR Code: ");
     Serial1.println(results.value, HEX); // Print the received IR code
+
     systemRunning = !systemRunning; // Toggle the systemRunning flag
     irrecv.resume(); // Receive the next value
   }
