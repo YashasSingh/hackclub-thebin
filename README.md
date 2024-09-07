@@ -3,7 +3,7 @@
 ## Multipurpose Robotics Control System
 ![Screenshot 2024-08-22 211430](https://github.com/user-attachments/assets/00be7167-4091-4071-a695-07763f5bfb43)
 
-[Try it out yourself]([https://www.adafruit.com/](https://wokwi.com/projects/401440266766602241))
+[Try it out yourself]([https://wokwi.com/projects/401440266766602241])
 
 ## Overview
 
